@@ -79,10 +79,10 @@
         .cta-box h3 { color: #f5d78e; font-size: 16px; margin-bottom: 8px; letter-spacing: 2px; }
         .cta-box p { font-size: 13px; color: #c8b898; margin-bottom: 14px; line-height: 1.6; }
         .cta-btn { display: inline-block; padding: 11px 28px; background: linear-gradient(135deg, #07c160, #06ad56); border-radius: 25px; color: #fff; font-size: 15px; text-decoration: none; font-weight: bold; letter-spacing: 2px; }
-        
-        
-        
-        
+        .loading { display: none; text-align: center; padding: 60px 0; }
+        .loading.active { display: block; }
+        .loading-spinner { width: 46px; height: 46px; border: 3px solid rgba(245,215,142,0.2); border-top-color: #f5d78e; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        .loading-text { color: #a89db8; font-size: 13px; letter-spacing: 2px; }
         .disclaimer { text-align: center; font-size: 11px; color: #5a4f6a; margin-top: 24px; padding: 12px; line-height: 1.6; }
         .bottom-nav { display: flex; justify-content: center; gap: 16px; margin: 20px 0; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; }
         .nav-item { font-size: 11px; color: #8a7f9a; text-align: center; cursor: pointer; }
@@ -265,7 +265,6 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
 </script>
 </head>
 <body>
-
 <div class="stars" id="stars"></div>
 <div class="container">
     <!-- 首页 -->
@@ -281,7 +280,7 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
             <div class="func-card" onclick="showPage('page-bazi')"><span class="hot-tag">HOT</span><span class="icon">🏮</span><div class="title">八字命理</div><div class="desc">生辰八字·五行命盘·运势详批</div></div>
             <div class="func-card" onclick="showPage('page-name')"><span class="icon">📝</span><div class="title">姓名测分</div><div class="desc">五格三才·姓名吉凶·运势加持</div></div>
             <div class="func-card" onclick="showPage('page-yijing')"><span class="icon">🔮</span><div class="title">易经占卜</div><div class="desc">六爻卦象·趋吉避凶·指点迷津</div></div>
-            <div class="func-card" onclick="showPage('page-bazi-hehun')"><span class="icon">💑</span><div class="title">八字合婚</div><div class="desc">输入双方生辰·AI分析姻缘匹配</div></div>
+            <div class="func-card" onclick="showPage('page-bazi-hehun')"><span class="icon">💑</span><div class="title">八字合婚</div><div class="desc">输入双方生辰·大师分析姻缘匹配</div></div>
             <div class="func-card" onclick="showPage('page-palm')"><span class="icon">✋</span><div class="title">手相分析</div><div class="desc">掌纹命理·事业线·感情线·智慧线</div></div>
             <div class="func-card" onclick="showPage('page-face')"><span class="icon">👤</span><div class="title">面相分析</div><div class="desc">五官面相·性格特点·运势走向</div></div>
         </div>
@@ -303,7 +302,7 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
         <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
         <div class="page-title">💑 八字合婚</div>
         <div style="background:rgba(245,215,142,0.08);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
-            <div style="font-size:14px;color:#f5d78e;">👫 输入双方生辰，AI分析姻缘匹配度</div>
+            <div style="font-size:14px;color:#f5d78e;">👫 输入双方生辰，大师分析姻缘匹配度</div>
         </div>
         <div style="font-size:15px;color:#f5d78e;font-weight:bold;margin-bottom:12px;">👨 男方信息</div>
         <div class="form-group"><label>👤 姓名</label><input type="text" id="hehun-male-name" placeholder="男方姓名（选填）"></div>
@@ -399,6 +398,7 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
     </div>
 
     <!-- 加载中 -->
+    <div class="page" id="page-loading"><div class="loading active"><div class="loading-spinner"></div><div class="loading-text">正在为您精准推算...</div></div></div>
 
     <!-- 结果页 -->
     <div class="page" id="page-result">
@@ -406,10 +406,10 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
         <div class="result-header"><h2 id="result-title">🔮 测算结果</h2></div>
         <div class="result-body" id="result-body"></div>
         <div class="cta-box">
-            <h3>🔮 解锁完整命理报告</h3>
-            <p>添加专业命理师微信，获取更详细的个性化解读与开运建议</p>
-            <a href="javascript:void(0)" class="cta-btn" onclick="copyWechat()">📱 添加微信咨询</a>
-            <div id="wechat-id" style="margin-top:12px;color:#f5d78e;font-size:15px;font-weight:bold;">微信号：ljmiaosuan</div>
+            <h3>🔮 完整解读 ¥9.9</h3>
+            <p>当前为预览结果，完整命理报告需 ¥9.9 解锁</p>
+            <p style="font-size:12px;color:#a89db8;margin-bottom:10px;">添加微信 <strong style="color:#f5d78e;">ljmiaosuan</strong>，转账后获取完整报告</p>
+            <a href="javascript:void(0)" class="cta-btn" onclick="copyWechatPay()">📱 复制微信并支付 ¥9.9</a>
         </div>
         <div style="text-align:center;margin-top:18px;"><button class="submit-btn" style="background:linear-gradient(135deg,#6a5f7a,#3a2a5e);font-size:14px;padding:12px;" onclick="showPage('page-home')">再测一次 🔄</button></div>
     </div>
@@ -419,7 +419,6 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
 <script>
 /* MiniMax M3 via Pages Functions proxy */
 const MIMO_URL = 'https://token-plan-cn.xiaomimimo.com/v1/chat/completions';
-const MIMO_API_KEY = 'tp-ccbnai843635qkwpmmpwo30pizka3qzsln85g3y96ndcbdmo';
 
 // 清理AI返回的markdown符号，让显示更干净
 function cleanAIText(text) {
@@ -532,10 +531,11 @@ document.getElementById('palm-photo')?.addEventListener('change', function(e) {
 
 // API调用 - 流式输出版
 async function callMimo(systemPrompt, userPrompt) {
+    showPage('page-loading');
     try {
         const resp = await fetch(MIMO_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MIMO_API_KEY },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer tp-cndxyeprrisdekw821jiyctguafb9xd0b1m4n8khraszgpac' },
             body: JSON.stringify({
                 model: 'mimo-v2.5-pro',
                 messages: [
@@ -553,10 +553,8 @@ async function callMimo(systemPrompt, userPrompt) {
         let content = '';
         let buffer = '';  // 拼接跨chunk的不完整行
         let renderPending = false;  // 节流：避免每个delta都触发DOM重排
-        document.getElementById('result-title').textContent = '🔮 测算结果';
-        showPage('page-result');
+        showResult('🔮 测算结果', '正在为您精准推算...');
         const el = document.getElementById('result-body');
-        el.textContent = '正在为您精准推算...';
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
@@ -569,7 +567,7 @@ async function callMimo(systemPrompt, userPrompt) {
                 if (trimmed.startsWith('data: ') && trimmed !== 'data: [DONE]') {
                     try {
                         const data = JSON.parse(trimmed.slice(6));
-                        const delta = data.choices?.[0]?.delta?.content || '';
+                        const delta = data.choices?.[0]?.delta?.content || data.choices?.[0]?.delta?.reasoning_content || '';
                         if (delta) {
                             content += delta;
                             // 节流渲染：用rAF合并同一帧内的多次delta
@@ -818,6 +816,13 @@ function renderHuangli(date) {
 function copyWechat() {
     const text = document.getElementById('wechat-id').textContent.replace('微信号：', '');
     navigator.clipboard?.writeText(text).then(() => alert('微信号已复制：' + text + '\n\n请打开微信，搜索此微信号添加好友')).catch(() => alert('请手动复制微信号：' + text));
+}
+
+function copyWechatPay() {
+    const wx = 'ljmiaosuan';
+    navigator.clipboard?.writeText(wx).then(() => {
+        alert('微信号已复制：' + wx + '\n\n请打开微信 → 搜索 → 粘贴添加好友\n\n转账 ¥9.9 后，命理师将发送完整报告');
+    }).catch(() => alert('请手动复制微信号：' + wx + '\n\n转账 ¥9.9 后，命理师将发送完整报告'));
 }
 
 function copyWechatNotice() {
