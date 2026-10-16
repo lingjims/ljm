@@ -418,7 +418,7 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
 
 <script>
 /* MiniMax M3 via Pages Functions proxy */
-const MIMO_URL = 'https://token-plan-cn.xiaomimimo.com/v1/chat/completions';
+const MIMO_URL = 'https://lingjims.pages.dev/api/chat';
 
 // 清理AI返回的markdown符号，让显示更干净
 function cleanAIText(text) {
@@ -535,14 +535,14 @@ async function callMimo(systemPrompt, userPrompt) {
     try {
         const resp = await fetch(MIMO_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer tp-cndxyeprrisdekw821jiyctguafb9xd0b1m4n8khraszgpac' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: 'mimo-v2.5-pro',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
                 ],
-                max_tokens: 4000,
+                max_tokens: 1500,
                 temperature: 0.7,
                 stream: true
             })
@@ -613,8 +613,8 @@ function submitBazi() {
     if (!hour) return alert('请选择出生时辰');
     const name = document.getElementById('bazi-name').value || '缘主';
     const gender = document.getElementById('bazi-gender').value;
-    const sys = '你是一位精通中国传统命理学的八字算命大师。请根据用户的出生日期和时辰，进行详细的八字命理分析。分析内容包括：1.八字排盘（年柱、月柱、日柱、时柱）2.五行分析 3.命格特点 4.性格分析 5.事业财运 6.感情婚姻 7.健康提醒 8.开运建议 9.【总结】用3-5句话概括整体命格特点和核心建议。请用通俗易懂的语言，带有传统命理术语的解释。回复要有条理，使用emoji点缀。';
-    const user = '姓名：' + name + '\n性别：' + gender + '\n出生日期：' + date + '\n出生时辰：' + hour + '\n请为我进行详细的八字命理分析。';
+    const sys = '你是一位精通中国传统命理学的八字算命大师。请根据用户的出生日期和时辰进行八字分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写铺垫和套话。格式：1.八字排盘（四柱一行列出）2.五行喜忌（一句话）3.性格特点 4.事业财运 5.感情婚姻 6.开运建议（3条短句）7.【总结】2句话。通俗易懂，可少量emoji。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n出生日期：' + date + '\n出生时辰：' + hour + '\n请为我进行精简的八字命理分析。';
     callMimo(sys, user);
 }
 
@@ -628,8 +628,8 @@ function submitHehun() {
     if (!femaleDate || !femaleHour) return alert('请填写女方完整的出生信息');
     const maleName = document.getElementById('hehun-male-name').value || '男方';
     const femaleName = document.getElementById('hehun-female-name').value || '女方';
-    const sys = '你是一位精通八字合婚的传统命理师。请根据男女双方的出生信息，进行详细的八字合婚分析。分析内容包括：1.双方八字排盘 2.五行互补分析 3.日柱干支关系 4.性格匹配度 5.婚姻运势预测 6.需要注意的年份 7.化解建议 8.综合评分（满分100分）9.【总结】用3-5句话概括双方姻缘核心特点和相处建议。请给出客观、详细的分析，语言温和有建设性。';
-    const user = '男方：' + maleName + '，出生日期：' + maleDate + '，时辰：' + maleHour + '\n女方：' + femaleName + '，出生日期：' + femaleDate + '，时辰：' + femaleHour + '\n请为我们进行八字合婚分析。';
+    const sys = '你是一位精通八字合婚的传统命理师。请根据男女双方的出生信息进行八字合婚分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.双方八字（一行）2.五行匹配（一句话）3.性格匹配度 4.婚姻运势 5.注意年份 6.相处建议（2条短句）7.综合评分（满分100分）8.【总结】2句话。语言温和有建设性。';
+    const user = '男方：' + maleName + '，出生日期：' + maleDate + '，时辰：' + maleHour + '\n女方：' + femaleName + '，出生日期：' + femaleDate + '，时辰：' + femaleHour + '\n请为我们进行精简的八字合婚分析。';
     callMimo(sys, user);
 }
 
@@ -637,8 +637,8 @@ function submitHehun() {
 function submitFace() {
     const name = document.getElementById('face-name').value || '缘主';
     const gender = document.getElementById('face-gender').value;
-    const sys = '你是一位精通中国传统面相学的面相大师。请根据用户提供的信息，进行详细的面相分析。分析内容包括：1.面相整体格局 2.额头（天庭）分析 3.眉毛分析 4.眼睛分析 5.鼻子分析 6.嘴巴分析 7.耳朵分析 8.面型与运势 9.综合面相点评 10.开运建议 11.【总结】用3-5句话概括面相核心特点和运势走向。请用专业但通俗的语言，带有传统文化韵味。';
-    const user = '姓名：' + name + '\n性别：' + gender + '\n请为我进行面相分析，给出详细的面相解读和运势建议。';
+    const sys = '你是一位精通中国传统面相学的面相大师。请根据用户提供的信息进行面相分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.整体格局 2.五官点评（额眉眼鼻口耳合并，3句以内）3.面型与运势 4.开运建议（2条短句）5.【总结】2句话。专业但通俗，带传统文化韵味。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n请为我进行面相分析，给出精简的面相解读和运势建议。';
     callMimo(sys, user);
 }
 
@@ -648,8 +648,8 @@ function submitNameScore() {
     if (!name) return alert('请输入您的姓名');
     const gender = document.getElementById('name-gender').value;
     const birthday = document.getElementById('name-birthday').value;
-    const sys = '你是一位精通中国传统姓名学的姓名大师。请根据用户提供的姓名，进行详细的姓名分析和评分。分析内容包括：1.姓名五格分析（天格、人格、地格、外格、总格）2.三才配置分析 3.姓名吉凶判断 4.姓名五行属性 5.姓名与性格关系 6.姓名与事业运势 7.姓名与感情婚姻 8.姓名与健康 9.综合评分（满分100分）10.改名建议（如有需要）11.【总结】用3-5句话概括姓名核心特点和运势影响。请给出专业、客观的分析。';
-    const user = '姓名：' + name + '\n性别：' + gender + (birthday ? '\n出生日期：' + birthday : '') + '\n请为我进行详细的姓名分析和评分。';
+    const sys = '你是一位精通中国传统姓名学的姓名大师。请根据用户提供的姓名进行分析评分，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.五格三才（合并一句）2.五行吉凶 3.性格影响 4.事业感情影响 5.综合评分（满分100分）6.改名建议（如有需要，一句话）7.【总结】2句话。专业客观。';
+    const user = '姓名：' + name + '\n性别：' + gender + (birthday ? '\n出生日期：' + birthday : '') + '\n请为我进行精简的姓名分析和评分。';
     callMimo(sys, user);
 }
 
@@ -658,8 +658,8 @@ function submitPalm() {
     const name = document.getElementById('palm-name').value || '缘主';
     const gender = document.getElementById('palm-gender').value;
     const hand = document.getElementById('palm-hand').value;
-    const sys = '你是一位精通中国传统手相学的手相大师。请根据用户提供的信息，进行详细的手相分析。分析内容包括：1.掌型分析（木形手、火形手、土形手、金形手、水形手）2.三大主线分析（生命线、智慧线、感情线）3.事业线分析 4.财运线分析 5.婚姻线分析 6.健康线分析 7.特殊掌纹标记（星纹、岛纹、十字纹等）8.手指形态分析 9.掌色分析 10.综合运势预测 11.开运建议 12.【总结】用3-5句话概括手相核心特点和运势走向。请用专业但通俗的语言，带有传统文化韵味。';
-    const user = '姓名：' + name + '\n性别：' + gender + '\n分析手掌：' + hand + '\n请为我进行详细的手相分析，给出运势解读和建议。';
+    const sys = '你是一位精通中国传统手相学的手相大师。请根据用户提供的信息进行手相分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.掌型 2.三大主线（生命线、智慧线、感情线各一句）3.事业财运（合并）4.婚姻健康（合并）5.特殊掌纹（如有）6.开运建议（2条短句）7.【总结】2句话。专业但通俗。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n分析手掌：' + hand + '\n请为我进行精简的手相分析，给出运势解读和建议。';
     callMimo(sys, user);
 }
 
@@ -669,8 +669,8 @@ function submitYijing() {
     if (!question) return alert('请输入你的问题');
     if (selectedYijing.length < 3) return alert('请选择3张卦牌');
     const cards = selectedYijing.map(c => c.symbol + ' ' + c.name + '(' + c.meaning + '): ' + c.desc).join('\n');
-    const sys = '你是一位精通易经卦象的大师。请根据用户抽取的卦牌和问题，进行详细的易经占卜解读。内容包括：1.卦象总览 2.每张卦牌的含义 3.卦象组合分析 4.对问题的具体解答 5.时运分析 6.行动建议 7.注意事项 8.【总结】用3-5句话概括卦象核心启示和行动指引。请用传统易学语言结合现代白话进行解读。';
-    const user = '我的问题：' + question + '\n\n抽取的卦牌：\n' + cards + '\n\n请为我进行详细的易经占卜解读。';
+    const sys = '你是一位精通易经卦象的大师。请根据用户抽取的卦牌和问题进行占卜解读，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.卦象总览 2.三张卦牌（各一句）3.对问题的解答（2-3句）4.行动建议（2条短句）5.【总结】2句话。传统易学语言结合现代白话。';
+    const user = '我的问题：' + question + '\n\n抽取的卦牌：\n' + cards + '\n\n请为我进行精简的易经占卜解读。';
     callMimo(sys, user);
 }
 
@@ -681,8 +681,8 @@ function submitFengshui() {
     const type = document.getElementById('fengshui-type').value;
     const birthday = document.getElementById('fengshui-birthday').value;
     const desc = document.getElementById('fengshui-desc').value;
-    const sys = '你是一位精通中国传统风水学的风水大师。请根据用户提供的房屋信息，进行详细的风水分析。内容包括：1.房屋朝向分析 2.整体风水格局 3.五行方位分析 4.财位分析 5.桃花位/文昌位分析 6.厨房/卧室风水 7.风水煞气化解 8.开运布局建议 9.【总结】用3-5句话概括风水核心问题和最重要的布局调整建议。请给出专业、实用的风水建议。';
-    const user = '房屋类型：' + type + '\n房屋朝向：' + direction + '\n业主生辰：' + (birthday || '未提供') + '\n补充说明：' + (desc || '无') + '\n\n请为我进行详细的风水分析和布局建议。';
+    const sys = '你是一位精通中国传统风水学的风水大师。请根据用户提供的房屋信息进行风水分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.朝向与整体格局（一句）2.财位与桃花位/文昌位（各一句）3.厨房卧室（合并）4.煞气化解（如有）5.布局建议（3条短句）6.【总结】2句话。专业实用。';
+    const user = '房屋类型：' + type + '\n房屋朝向：' + direction + '\n业主生辰：' + (birthday || '未提供') + '\n补充说明：' + (desc || '无') + '\n\n请为我进行精简的风水分析和布局建议。';
     callMimo(sys, user);
 }
 
