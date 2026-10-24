@@ -111,6 +111,10 @@
       <span class="title">选择日期</span>
       <button onclick="confirmWheelPicker()">确定</button>
     </div>
+    <div class="wheel-mode-tabs" style="display:flex;justify-content:center;gap:8px;padding:8px 0 2px;">
+      <button id="modeSolarBtn" onclick="setWheelMode('solar')" style="padding:4px 18px;border-radius:14px;border:1px solid #f5d78e;background:transparent;color:#f5d78e;font-size:13px;">阳历</button>
+      <button id="modeLunarBtn" onclick="setWheelMode('lunar')" style="padding:4px 18px;border-radius:14px;border:1px solid #f5d78e;background:#f5d78e;color:#4a3b2a;font-size:13px;">农历</button>
+    </div>
     <div class="wheel-picker-body">
       <div class="wheel-col" id="wheelYear"></div>
       <div class="wheel-col" id="wheelMonth"></div>
@@ -169,20 +173,40 @@ function playTickSound() {
   } catch(e) {}
 }
 // 滚轮日期选择器
-var wheelPicker = { target: null, year: 2000, month: 1, day: 1, startY: 0, cols: {} };
+var wheelPicker = { target: null, year: 2000, month: 1, day: 1, startY: 0, cols: {}, mode: 'lunar' };
+var LUNAR_MONTHS = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
+function setWheelMode(m) {
+  wheelPicker.mode = m;
+  var sb = document.getElementById('modeSolarBtn');
+  var lb = document.getElementById('modeLunarBtn');
+  if (sb && lb) {
+    sb.style.background = m === 'solar' ? '#f5d78e' : 'transparent';
+    sb.style.color = m === 'solar' ? '#4a3b2a' : '#f5d78e';
+    lb.style.background = m === 'lunar' ? '#f5d78e' : 'transparent';
+    lb.style.color = m === 'lunar' ? '#4a3b2a' : '#f5d78e';
+  }
+  renderWheelCol('wheelMonth', 1, 12, wheelPicker.month, m === 'lunar' ? LUNAR_MONTHS : null);
+  renderWheelCol('wheelDay', 1, m === 'lunar' ? 30 : 31, wheelPicker.day);
+}
 function openWheelPicker(input) {
   initAudio();
   wheelPicker.target = input;
   var val = input.value;
-  if (val && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
-    var parts = val.split('-');
-    wheelPicker.year = parseInt(parts[0]);
-    wheelPicker.month = parseInt(parts[1]);
-    wheelPicker.day = parseInt(parts[2]);
+  var lunarMatch = val && val.match(/^农历(\d{4})-(\d{2})-(\d{2})$/);
+  var solarMatch = val && val.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (lunarMatch) {
+    wheelPicker.mode = 'lunar';
+    wheelPicker.year = parseInt(lunarMatch[1]);
+    wheelPicker.month = parseInt(lunarMatch[2]);
+    wheelPicker.day = parseInt(lunarMatch[3]);
+  } else if (solarMatch) {
+    wheelPicker.mode = 'solar';
+    wheelPicker.year = parseInt(solarMatch[1]);
+    wheelPicker.month = parseInt(solarMatch[2]);
+    wheelPicker.day = parseInt(solarMatch[3]);
   }
   renderWheelCol('wheelYear', 1920, 2120, wheelPicker.year);
-  renderWheelCol('wheelMonth', 1, 12, wheelPicker.month);
-  renderWheelCol('wheelDay', 1, 31, wheelPicker.day);
+  setWheelMode(wheelPicker.mode);
   document.getElementById('wheelPickerOverlay').classList.add('active');
 }
 function closeWheelPicker() { document.getElementById('wheelPickerOverlay').classList.remove('active'); }
@@ -190,17 +214,20 @@ function confirmWheelPicker() {
   if (wheelPicker.target) {
     var m = wheelPicker.month < 10 ? '0' + wheelPicker.month : wheelPicker.month;
     var d = wheelPicker.day < 10 ? '0' + wheelPicker.day : wheelPicker.day;
-    wheelPicker.target.value = wheelPicker.year + '-' + m + '-' + d;
+    var dateStr = wheelPicker.year + '-' + m + '-' + d;
+    if (wheelPicker.mode === 'lunar') dateStr = '农历' + dateStr;
+    wheelPicker.target.value = dateStr;
     // 触发change事件
     wheelPicker.target.dispatchEvent(new Event('change'));
   }
   closeWheelPicker();
 }
-function renderWheelCol(id, min, max, current) {
+function renderWheelCol(id, min, max, current, labels) {
   var col = document.getElementById(id);
   var html = '<div class="wheel-col-inner" data-min="' + min + '" data-max="' + max + '">';
   for (var i = min; i <= max; i++) {
-    html += '<div class="wheel-item' + (i === current ? ' active' : '') + '" data-val="' + i + '">' + i + '</div>';
+    var labelText = labels ? (labels[i - min] || i) : i;
+    html += '<div class="wheel-item' + (i === current ? ' active' : '') + '" data-val="' + i + '">' + labelText + '</div>';
   }
   html += '</div>';
   col.innerHTML = html;
@@ -398,7 +425,6 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
     </div>
 
     <!-- 加载中 -->
-    <div class="page" id="page-loading"><div class="loading active"><div class="loading-spinner"></div><div class="loading-text">正在为您精准推算...</div></div></div>
 
     <!-- 结果页 -->
     <div class="page" id="page-result">
@@ -406,8 +432,8 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
         <div class="result-header"><h2 id="result-title">🔮 测算结果</h2></div>
         <div class="result-body" id="result-body"></div>
         <div class="cta-box">
-            <h3>🔮 完整解读 ¥9.9</h3>
-            <p>当前为预览结果，完整命理报告需 ¥9.9 解锁</p>
+            <h3>🔮 师傅一对一详批 ¥99</h3>
+            <p>想看更深入的命盘详批？师傅人工一对一解读，含大运流年细批</p>
             <p style="font-size:12px;color:#a89db8;margin-bottom:10px;">添加微信 <strong style="color:#f5d78e;">ljmiaosuan</strong>，转账后获取完整报告</p>
             <a href="javascript:void(0)" class="cta-btn" onclick="copyWechatPay()">📱 复制微信并支付 ¥9.9</a>
         </div>
@@ -418,7 +444,7 @@ document.getElementById('wheelPickerOverlay').addEventListener('click', function
 
 <script>
 /* MiniMax M3 via Pages Functions proxy */
-const MIMO_URL = 'https://lingjims.pages.dev/api/chat';
+const MIMO_URL = /github\.io$/.test(location.hostname) ? 'https://lingjims.pages.dev/api/chat' : '/api/chat';
 
 // 清理AI返回的markdown符号，让显示更干净
 function cleanAIText(text) {
@@ -531,19 +557,22 @@ document.getElementById('palm-photo')?.addEventListener('change', function(e) {
 
 // API调用 - 流式输出版
 async function callMimo(systemPrompt, userPrompt) {
-    showPage('page-loading');
+    showResult('🔮 测算结果', '正在为您精准推算......');
     try {
         const resp = await fetch(MIMO_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: 'mimo-v2.5-pro',
+                model: 'mimo-v2.6-pro',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
                 ],
-                max_tokens: 1500,
+                max_tokens: 8000,
                 temperature: 0.7,
+                thinking: { type: 'disabled' },
+                chat_template_kwargs: { enable_thinking: false },
+                reasoning_effort: 'none',
                 stream: true
             })
         });
@@ -553,7 +582,6 @@ async function callMimo(systemPrompt, userPrompt) {
         let content = '';
         let buffer = '';  // 拼接跨chunk的不完整行
         let renderPending = false;  // 节流：避免每个delta都触发DOM重排
-        showResult('🔮 测算结果', '正在为您精准推算...');
         const el = document.getElementById('result-body');
         while (true) {
             const { done, value } = await reader.read();
@@ -567,7 +595,7 @@ async function callMimo(systemPrompt, userPrompt) {
                 if (trimmed.startsWith('data: ') && trimmed !== 'data: [DONE]') {
                     try {
                         const data = JSON.parse(trimmed.slice(6));
-                        const delta = data.choices?.[0]?.delta?.content || data.choices?.[0]?.delta?.reasoning_content || '';
+                        const delta = data.choices?.[0]?.delta?.content || '';
                         if (delta) {
                             content += delta;
                             // 节流渲染：用rAF合并同一帧内的多次delta
@@ -593,9 +621,9 @@ async function callMimo(systemPrompt, userPrompt) {
                 if (delta) content += delta;
             } catch (e) {}
         }
-        // 最终结果：只做一次cleanAIText
+        // 最终结果：只做一次cleanAIText，走半遮挡付费墙渲染
         if (!content) el.textContent = '服务器繁忙，请稍后再试';
-        else el.textContent = cleanAIText(content);
+        else renderPaywall(cleanAIText(content));
     } catch (err) { showResult('⚠️ 网络错误', '无法连接到AI服务\n\n' + err.message); }
 }
 
@@ -693,7 +721,24 @@ function initHuangli() {
 }
 
 function queryHuangli(dateStr) {
-    if (dateStr) renderHuangli(new Date(dateStr));
+    if (!dateStr) return;
+    var lunarMatch = String(dateStr).match(/^农历(\d{4})-(\d{2})-(\d{2})$/);
+    if (lunarMatch) {
+        var solarDate = lunarToSolar(parseInt(lunarMatch[1]), parseInt(lunarMatch[2]), parseInt(lunarMatch[3]));
+        if (!solarDate) { renderHuangli(new Date()); return; }
+        renderHuangli(solarDate);
+        return;
+    }
+    renderHuangli(new Date(dateStr));
+}
+function lunarToSolar(y, m, d) {
+    var dt = new Date(y, 0, 20);
+    for (var i = 0; i < 400; i++) {
+        var l = solarToLunar(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
+        if (l.year === y && l.month === m && l.day === d && !l.isLeap) return dt;
+        dt.setDate(dt.getDate() + 1);
+    }
+    return null;
 }
 
 // 农历转换库（1900-2100年精确数据）
@@ -853,6 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
+<script src="paywall.js"></script>
 </body>
 </html>
 <!-- MiniMax-M3-v2 -->
