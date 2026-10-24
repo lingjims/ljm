@@ -1,0 +1,19 @@
+/* 灵机妙算变现模块：半遮挡付费墙 + 分享裂变 + 五行商品卡 */
+(function(){var s=document.createElement('style');s.textContent='.result-text{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.8;color:#efe9f7;margin:0 0 12px}.paywall-wrap{position:relative}.paywall-blur{filter:blur(6px);opacity:.55;max-height:120px;overflow:hidden;user-select:none;-webkit-user-select:none}.paywall-mask{position:absolute;left:0;right:0;bottom:0;padding:14px 12px 18px;text-align:center;background:linear-gradient(180deg,rgba(26,16,46,0),rgba(26,16,46,.95) 40%);border-radius:0 0 14px 14px}.paywall-tip{font-size:13px;color:#c9bce0;margin:6px 0 12px}.cta-share{background:linear-gradient(135deg,#8f7bd8,#6a4fd0)!important;color:#fff!important}.wx-card{margin:18px 0 6px;padding:16px;border-radius:14px;background:linear-gradient(135deg,rgba(245,215,142,.14),rgba(138,120,200,.14));border:1px solid rgba(245,215,142,.35)}.wx-title{font-size:16px;font-weight:800;color:#f5d78e;margin-bottom:8px}.wx-item{font-size:14px;color:#efe9f7;line-height:1.7;margin-bottom:6px}.wx-use{color:#c9bce0;font-size:13px}.wx-desc{font-size:12px;color:#a89db8;line-height:1.7;margin-bottom:10px}';document.head.appendChild(s);})();
+
+var FULL_RESULT='',RESULT_UNLOCKED=false;
+var WUXING_GOODS={'金':{name:'黄水晶貔貅手链',use:'补金聚财，稳固财库',price:'¥168'},'木':{name:'沉香手串',use:'补木生发，旺事业人缘',price:'¥268'},'水':{name:'黑曜石吊坠',use:'补水旺运，化煞挡灾',price:'¥128'},'火':{name:'南红玛瑙手串',use:'补火旺运，添贵人缘',price:'¥198'},'土':{name:'蜜蜡平安扣',use:'补土稳运，安神定心',price:'¥238'}};
+
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function detectWuxing(t){var m=t.match(/(?:缺|所缺|不足)([金木水火土])/);if(m)return m[1];m=t.match(/(?:喜用神|喜神|用神)[为：:]?\s*([金木水火土])/);if(m)return m[1];var best='金',n=1e9;'金木水火土'.split('').forEach(function(c){var k=t.split(c).length-1;if(k<n){n=k;best=c}});return best;}
+
+function buildWuxingCard(t){var wx=detectWuxing(t);var g=WUXING_GOODS[wx];return '<div class="wx-card"><div class="wx-title">🎁 开运好物推荐 · 五行补'+wx+'</div><div class="wx-item"><strong>'+g.name+'</strong>　<span style="color:#f5d78e">'+g.price+'</span><br><span class="wx-use">'+g.use+'</span></div><div class="wx-desc">综合测算结果，您命理所缺五行为「'+wx+'」，建议佩戴对应开运物补益运势，好物铺子已备好同款。</div><a href="javascript:void(0)" class="cta-btn" onclick="copyWechatPay()">🛍 去好物铺子下单 · 微信 ljmiaosuan</a></div>';}
+
+function renderPaywall(text){FULL_RESULT=text;var el=document.getElementById('result-body');var t=escH(text);if(RESULT_UNLOCKED){el.innerHTML='<pre class="result-text">'+t+'</pre>'+buildWuxingCard(text);return;}var cut=Math.max(Math.floor(t.length*0.6),60);el.innerHTML='<pre class="result-text">'+t.slice(0,cut)+'</pre><div class="paywall-wrap"><pre class="result-text paywall-blur">'+t.slice(cut)+'</pre><div class="paywall-mask"><div style="font-size:26px">🔒</div><div class="paywall-tip">后半段为完整解读（含【总结】与开运建议）</div><a href="javascript:void(0)" class="cta-btn" onclick="unlockFull()">💰 ¥9.9 解锁完整版</a><a href="javascript:void(0)" class="cta-btn cta-share" onclick="shareUnlock()">📤 分享给 TA 免费解锁</a></div></div>';}
+
+function unlockFull(){if(typeof copyWechatPay==='function')copyWechatPay();if(confirm('已复制师傅微信 ljmiaosuan\n\n① 微信转账 ¥9.9\n② 发送"已付款"获取完整报告\n\n（演示模式：点【确定】立即解锁）')){RESULT_UNLOCKED=true;renderPaywall(FULL_RESULT);}}
+
+function fallbackCopy(t){var a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(a);}
+
+function shareUnlock(){var txt='🔮 我在【灵机妙算】测了八字运势，AI命理超准！合婚/姓名/手相都能免费测 👉 https://lingjims.pages.dev';var done=function(){RESULT_UNLOCKED=true;renderPaywall(FULL_RESULT);alert('📤 分享文案已复制，发给好友或朋友圈即可\n完整版已解锁！')};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(function(){fallbackCopy(txt);done()})}else{fallbackCopy(txt);done()}}
