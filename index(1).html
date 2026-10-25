@@ -561,6 +561,14 @@ document.getElementById('palm-photo')?.addEventListener('change', function(e) {
 // API调用 - 流式输出版
 async function callMimo(systemPrompt, userPrompt) {
     showResult('🔮 测算结果', '正在为您精准推算......');
+    // 渲染节流状态：终态渲染前必须撤掉挂起的rAF——否则rAF会在renderPaywall之后
+    // 把整个付费墙innerHTML覆盖成纯文本（安卓上「分享解锁按钮消失」的根因）
+    let renderPending = false;
+    let renderRaf = 0;
+    const stopRender = () => {
+        if (renderRaf) { cancelAnimationFrame(renderRaf); renderRaf = 0; }
+        renderPending = false;
+    };
     for (let attempt = 1; attempt <= 3; attempt++) {
     try {
         const resp = await fetch(MIMO_URL, {
@@ -586,7 +594,6 @@ async function callMimo(systemPrompt, userPrompt) {
         const decoder = new TextDecoder();
         let content = '';
         let buffer = '';  // 拼接跨chunk的不完整行
-        let renderPending = false;  // 节流：避免每个delta都触发DOM重排
         const el = document.getElementById('result-body');
         while (true) {
             const { done, value } = await reader.read();
@@ -606,9 +613,10 @@ async function callMimo(systemPrompt, userPrompt) {
                             // 节流渲染：用rAF合并同一帧内的多次delta
                             if (!renderPending) {
                                 renderPending = true;
-                                requestAnimationFrame(() => {
-                                    el.textContent = content;
+                                renderRaf = requestAnimationFrame(() => {
+                                    renderRaf = 0;
                                     renderPending = false;
+                                    el.textContent = content;
                                 });
                             }
                         }
@@ -628,9 +636,11 @@ async function callMimo(systemPrompt, userPrompt) {
         }
         // 最终结果：只做一次cleanAIText，走半遮挡付费墙渲染
         if (!content) throw new Error('empty content');
+        stopRender();
         renderPaywall(cleanAIText(content));
         return;
     } catch (err) {
+        stopRender();
         if (attempt >= 3) {
             if (err && err.message === 'empty content') document.getElementById('result-body').textContent = '服务器繁忙，请稍后再试';
             else showResult('⚠️ 网络错误', '无法连接到AI服务\n\n' + (err ? err.message : ''));
@@ -913,7 +923,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-<script src="paywall.js"></script>
+<script src="paywall.js?v=20261026"></script>
 </body>
 </html>
 <!-- MiniMax-M3-v2 -->
