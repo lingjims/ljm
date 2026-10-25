@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>灵机妙算 - 八字命理·姓名测分·易经占卜·八字合婚·手相分析·面相分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 30%, #16213e 70%, #0f3460 100%); min-height: 100vh; color: #e8d5b7; overflow-x: hidden; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle 2s infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 1; } }
+        .container { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 16px; }
+        .header { text-align: center; padding: 24px 0 16px; }
+        .header .logo-symbol { font-size: 56px; margin-bottom: 8px; animation: spin 30s linear infinite; display: inline-block; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .header h1 { font-size: 26px; background: linear-gradient(90deg, #f5d78e, #f0a500, #f5d78e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 6px; margin-bottom: 6px; }
+        .header .subtitle { font-size: 13px; color: #8a7f9a; letter-spacing: 2px; }
+        .notice { background: rgba(245,215,142,0.08); border: 1px solid rgba(245,215,142,0.15); border-radius: 10px; padding: 10px 14px; margin: 12px 0; font-size: 12px; color: #a89db8; display: flex; align-items: center; gap: 8px; }
+        .func-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+        .func-card { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid rgba(245,215,142,0.15); border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+        .func-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 0%, rgba(245,215,142,0.1) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s; }
+        .func-card:active::after, .func-card:hover::after { opacity: 1; }
+        .func-card:active { transform: scale(0.96); }
+        .func-card .icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .func-card .title { font-size: 17px; font-weight: bold; color: #f5d78e; letter-spacing: 2px; }
+        .func-card .desc { font-size: 11px; color: #8a7f9a; margin-top: 6px; line-height: 1.5; }
+        .hot-tag { position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 2; }
+        .func-banner { background: linear-gradient(135deg, rgba(240,165,0,0.12), rgba(245,215,142,0.06)); border: 1px solid rgba(245,215,142,0.2); border-radius: 14px; padding: 18px 16px; margin: 12px 0; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.3s; }
+        .func-banner:active { transform: scale(0.98); }
+        .func-banner .icon { font-size: 36px; }
+        .func-banner .info { flex: 1; }
+        .func-banner .info .title { font-size: 16px; font-weight: bold; color: #f5d78e; }
+        .func-banner .info .desc { font-size: 12px; color: #8a7f9a; margin-top: 4px; }
+        .func-banner .arrow { color: #f5d78e; font-size: 18px; }
+        .section-title { font-size: 14px; color: #a89db8; letter-spacing: 3px; margin: 20px 0 12px; padding-left: 4px; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, #f5d78e, #f0a500); border-radius: 2px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; color: #a89db8; font-size: 14px; cursor: pointer; margin-bottom: 16px; padding: 8px 0; }
+        .back-btn:hover { color: #f5d78e; }
+        .page-title { color: #f5d78e; font-size: 20px; text-align: center; margin-bottom: 20px; letter-spacing: 3px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 14px; color: #f5d78e; margin-bottom: 8px; letter-spacing: 1px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 13px 14px; background: rgba(255,255,255,0.07); border: 1px solid rgba(245,215,142,0.25); border-radius: 10px; color: #e8d5b7; font-size: 15px; outline: none; transition: border-color 0.3s; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #f5d78e; background: rgba(255,255,255,0.1); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #5a4f6a; }
+        .form-group select option { background: #1a0a2e; color: #e8d5b7; }
+        .submit-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #f0a500, #f5d78e); border: none; border-radius: 12px; color: #1a0a2e; font-size: 17px; font-weight: bold; cursor: pointer; letter-spacing: 4px; transition: all 0.3s; margin-top: 8px; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(240,165,0,0.3); }
+        .submit-btn:active { transform: scale(0.98); }
+        .yijing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+        .yijing-card { aspect-ratio: 2/3; background: linear-gradient(135deg, #2a1a4e, #16213e); border: 2px solid rgba(245,215,142,0.2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 12px; text-align: center; padding: 6px; }
+        .yijing-card.selected { border-color: #f5d78e; background: linear-gradient(135deg, #3a2a5e, #1a3150); box-shadow: 0 0 15px rgba(245,215,142,0.25); }
+        .yijing-card .card-symbol { font-size: 28px; margin-bottom: 4px; }
+        .yijing-card .card-name { color: #f5d78e; font-size: 13px; font-weight: bold; }
+        .yijing-card .card-meaning { font-size: 10px; color: #8a7f9a; margin-top: 2px; }
+        .yijing-card:active { transform: scale(0.95); }
+        .huangli-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(245,215,142,0.2); border-radius: 14px; padding: 20px 16px; margin: 12px 0; }
+        .huangli-date { text-align: center; margin-bottom: 16px; }
+        .huangli-date .solar { font-size: 14px; color: #a89db8; }
+        .huangli-date .lunar { font-size: 22px; color: #f5d78e; font-weight: bold; margin-top: 4px; letter-spacing: 2px; }
+        .huangli-date .ganzhi { font-size: 14px; color: #c8b898; margin-top: 4px; }
+        .huangli-section { margin: 14px 0; }
+        .huangli-section .label { font-size: 13px; color: #8a7f9a; margin-bottom: 8px; }
+        .huangli-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .huangli-tag { padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+        .huangli-tag.good { background: rgba(46,213,115,0.15); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
+        .huangli-tag.bad { background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.3); color: #ff4757; }
+        .huangli-tag.neutral { background: rgba(245,215,142,0.1); border: 1px solid rgba(245,215,142,0.2); color: #f5d78e; }
+        .fengshui-compass { width: 180px; height: 180px; margin: 20px auto; border-radius: 50%; background: linear-gradient(135deg, #2a1a4e, #16213e); border: 3px solid rgba(245,215,142,0.3); display: flex; align-items: center; justify-content: center; position: relative; animation: spin 20s linear infinite; }
+        .fengshui-compass::before { content: '☰'; font-size: 50px; color: #f5d78e; }
+        .compass-direction { position: absolute; font-size: 12px; color: #f5d78e; font-weight: bold; }
+        .compass-n { top: 8px; } .compass-s { bottom: 8px; } .compass-e { right: 10px; } .compass-w { left: 10px; }
+        .result-header { text-align: center; padding: 16px 0; }
+        .result-header h2 { font-size: 20px; color: #f5d78e; letter-spacing: 3px; }
+        .result-body { background: rgba(255,255,255,0.05); border: 1px solid rgba(245,215,142,0.2); border-radius: 14px; padding: 20px 16px; line-height: 1.8; font-size: 14px; white-space: pre-wrap; min-height: 35vh; }
+        .cta-box { margin-top: 20px; background: linear-gradient(135deg, rgba(240,165,0,0.12), rgba(245,215,142,0.06)); border: 1px solid rgba(245,215,142,0.3); border-radius: 14px; padding: 20px 16px; text-align: center; }
+        .cta-box h3 { color: #f5d78e; font-size: 16px; margin-bottom: 8px; letter-spacing: 2px; }
+        .cta-box p { font-size: 13px; color: #c8b898; margin-bottom: 14px; line-height: 1.6; }
+        .cta-btn { display: inline-block; padding: 11px 28px; background: linear-gradient(135deg, #07c160, #06ad56); border-radius: 25px; color: #fff; font-size: 15px; text-decoration: none; font-weight: bold; letter-spacing: 2px; }
+        .loading { display: none; text-align: center; padding: 60px 0; }
+        .loading.active { display: block; }
+        .loading-spinner { width: 46px; height: 46px; border: 3px solid rgba(245,215,142,0.2); border-top-color: #f5d78e; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        .loading-text { color: #a89db8; font-size: 13px; letter-spacing: 2px; }
+        .disclaimer { text-align: center; font-size: 11px; color: #5a4f6a; margin-top: 24px; padding: 12px; line-height: 1.6; }
+        .bottom-nav { display: flex; justify-content: center; gap: 16px; margin: 20px 0; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; }
+        .nav-item { font-size: 11px; color: #8a7f9a; text-align: center; cursor: pointer; }
+        .nav-item .nav-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+    </style>
+<style>
+  /* 滚轮日期选择器 */
+  .wheel-picker-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: flex-end; justify-content: center; }
+  .wheel-picker-overlay.active { display: flex; }
+  .wheel-picker { background: #1a1a2e; border-radius: 16px 16px 0 0; width: 100%; max-width: 480px; padding: 16px; }
+  .wheel-picker-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; border-bottom: 1px solid rgba(245,215,142,0.15); }
+  .wheel-picker-header button { background: none; border: none; color: #f5d78e; font-size: 16px; padding: 8px 16px; cursor: pointer; }
+  .wheel-picker-header .title { color: #f5d78e; font-size: 16px; font-weight: bold; }
+  .wheel-picker-body { display: flex; height: 200px; overflow: hidden; position: relative; }
+  .wheel-picker-body::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 40px; transform: translateY(-50%); background: rgba(245,215,142,0.08); border-radius: 8px; pointer-events: none; z-index: 1; }
+  .wheel-col { flex: 1; overflow: hidden; position: relative; }
+  .wheel-col-inner { transition: transform 0.3s ease; }
+  .wheel-item { height: 40px; display: flex; align-items: center; justify-content: center; color: #8a7f9a; font-size: 16px; transition: color 0.2s, transform 0.2s; }
+  .wheel-item.active { color: #f5d78e; font-weight: bold; font-size: 18px; }
+  .wheel-item.near { color: #e8d5b7; }
+</style>
+<div class="wheel-picker-overlay" id="wheelPickerOverlay">
+  <div class="wheel-picker">
+    <div class="wheel-picker-header">
+      <button onclick="closeWheelPicker()">取消</button>
+      <span class="title">选择日期</span>
+      <button onclick="confirmWheelPicker()">确定</button>
+    </div>
+    <div class="wheel-mode-tabs" style="display:flex;justify-content:center;gap:8px;padding:8px 0 2px;">
+      <button id="modeSolarBtn" onclick="setWheelMode('solar')" style="padding:4px 18px;border-radius:14px;border:1px solid #f5d78e;background:transparent;color:#f5d78e;font-size:13px;">阳历</button>
+      <button id="modeLunarBtn" onclick="setWheelMode('lunar')" style="padding:4px 18px;border-radius:14px;border:1px solid #f5d78e;background:#f5d78e;color:#4a3b2a;font-size:13px;">农历</button>
+    </div>
+    <div class="wheel-picker-body">
+      <div class="wheel-col" id="wheelYear"></div>
+      <div class="wheel-col" id="wheelMonth"></div>
+      <div class="wheel-col" id="wheelDay"></div>
+    </div>
+  </div>
+</div>
+<script>
+// 齿轮声音效果 - iOS兼容版
+var audioCtx = null;
+var audioInitialized = false;
+
+// 用户交互时初始化音频（解决iOS autoplay限制）
+function initAudio() {
+  if (audioInitialized) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // 播放一个静音来激活音频上下文
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    gain.gain.value = 0;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.01);
+    audioInitialized = true;
+  } catch(e) {}
+}
+
+// 齿轮转动声音（多个短促音效组合）
+function playTickSound() {
+  if (!audioCtx) return;
+  try {
+    // 主咔哒声
+    var osc1 = audioCtx.createOscillator();
+    var gain1 = audioCtx.createGain();
+    osc1.connect(gain1);
+    gain1.connect(audioCtx.destination);
+    osc1.type = 'square';
+    osc1.frequency.value = 1200;
+    gain1.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+    osc1.start(audioCtx.currentTime);
+    osc1.stop(audioCtx.currentTime + 0.03);
+    // 金属质感声
+    var osc2 = audioCtx.createOscillator();
+    var gain2 = audioCtx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(audioCtx.destination);
+    osc2.type = 'triangle';
+    osc2.frequency.value = 2400 + Math.random() * 800;
+    gain2.gain.setValueAtTime(0.08, audioCtx.currentTime + 0.01);
+    gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    osc2.start(audioCtx.currentTime + 0.01);
+    osc2.stop(audioCtx.currentTime + 0.04);
+  } catch(e) {}
+}
+// 滚轮日期选择器
+var wheelPicker = { target: null, year: 2000, month: 1, day: 1, startY: 0, cols: {}, mode: 'lunar' };
+var LUNAR_MONTHS = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
+function setWheelMode(m) {
+  wheelPicker.mode = m;
+  var sb = document.getElementById('modeSolarBtn');
+  var lb = document.getElementById('modeLunarBtn');
+  if (sb && lb) {
+    sb.style.background = m === 'solar' ? '#f5d78e' : 'transparent';
+    sb.style.color = m === 'solar' ? '#4a3b2a' : '#f5d78e';
+    lb.style.background = m === 'lunar' ? '#f5d78e' : 'transparent';
+    lb.style.color = m === 'lunar' ? '#4a3b2a' : '#f5d78e';
+  }
+  renderWheelCol('wheelMonth', 1, 12, wheelPicker.month, m === 'lunar' ? LUNAR_MONTHS : null);
+  renderWheelCol('wheelDay', 1, m === 'lunar' ? 30 : 31, wheelPicker.day);
+}
+function openWheelPicker(input) {
+  initAudio();
+  wheelPicker.target = input;
+  var val = input.value;
+  var lunarMatch = val && val.match(/^农历(\d{4})-(\d{2})-(\d{2})$/);
+  var solarMatch = val && val.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (lunarMatch) {
+    wheelPicker.mode = 'lunar';
+    wheelPicker.year = parseInt(lunarMatch[1]);
+    wheelPicker.month = parseInt(lunarMatch[2]);
+    wheelPicker.day = parseInt(lunarMatch[3]);
+  } else if (solarMatch) {
+    wheelPicker.mode = 'solar';
+    wheelPicker.year = parseInt(solarMatch[1]);
+    wheelPicker.month = parseInt(solarMatch[2]);
+    wheelPicker.day = parseInt(solarMatch[3]);
+  }
+  renderWheelCol('wheelYear', 1920, 2120, wheelPicker.year);
+  setWheelMode(wheelPicker.mode);
+  document.getElementById('wheelPickerOverlay').classList.add('active');
+}
+function closeWheelPicker() { document.getElementById('wheelPickerOverlay').classList.remove('active'); }
+function confirmWheelPicker() {
+  if (wheelPicker.target) {
+    var m = wheelPicker.month < 10 ? '0' + wheelPicker.month : wheelPicker.month;
+    var d = wheelPicker.day < 10 ? '0' + wheelPicker.day : wheelPicker.day;
+    var dateStr = wheelPicker.year + '-' + m + '-' + d;
+    if (wheelPicker.mode === 'lunar') dateStr = '农历' + dateStr;
+    wheelPicker.target.value = dateStr;
+    // 触发change事件
+    wheelPicker.target.dispatchEvent(new Event('change'));
+  }
+  closeWheelPicker();
+}
+function renderWheelCol(id, min, max, current, labels) {
+  var col = document.getElementById(id);
+  var html = '<div class="wheel-col-inner" data-min="' + min + '" data-max="' + max + '">';
+  for (var i = min; i <= max; i++) {
+    var labelText = labels ? (labels[i - min] || i) : i;
+    html += '<div class="wheel-item' + (i === current ? ' active' : '') + '" data-val="' + i + '">' + labelText + '</div>';
+  }
+  html += '</div>';
+  col.innerHTML = html;
+  var inner = col.querySelector('.wheel-col-inner');
+  var idx = current - min;
+  inner.style.transform = 'translateY(' + (80 - idx * 40) + 'px)';
+  // 触摸滑动
+  var startY = 0, startTranslate = 0, lastIdx = idx;
+  inner.addEventListener('touchstart', function(e) {
+    initAudio();
+    startY = e.touches[0].clientY;
+    startTranslate = parseInt(inner.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
+    inner.style.transition = 'none';
+  });
+  inner.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var delta = e.touches[0].clientY - startY;
+    var newTranslate = startTranslate + delta;
+    inner.style.transform = 'translateY(' + newTranslate + 'px)';
+    // 检测是否滑过一个刻度
+    var newIdx = Math.round((80 - newTranslate) / 40);
+    if (newIdx !== lastIdx && newIdx >= 0 && newIdx <= max - min) {
+      playTickSound();
+      lastIdx = newIdx;
+    }
+  });
+  inner.addEventListener('touchend', function(e) {
+    inner.style.transition = 'transform 0.3s ease';
+    var translate = parseInt(inner.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
+    var idx = Math.round((80 - translate) / 40);
+    var items = inner.querySelectorAll('.wheel-item');
+    if (idx < 0) idx = 0;
+    if (idx >= items.length) idx = items.length - 1;
+    inner.style.transform = 'translateY(' + (80 - idx * 40) + 'px)';
+    items.forEach(function(item) { item.classList.remove('active'); });
+    items[idx].classList.add('active');
+    var val = parseInt(items[idx].dataset.val);
+    if (id === 'wheelYear') wheelPicker.year = val;
+    if (id === 'wheelMonth') wheelPicker.month = val;
+    if (id === 'wheelDay') wheelPicker.day = val;
+  });
+  // 点击选择
+  inner.addEventListener('click', function(e) {
+    var item = e.target.closest('.wheel-item');
+    if (!item) return;
+    playTickSound();
+    var items = inner.querySelectorAll('.wheel-item');
+    items.forEach(function(i) { i.classList.remove('active'); });
+    item.classList.add('active');
+    var val = parseInt(item.dataset.val);
+    var idx = val - min;
+    inner.style.transform = 'translateY(' + (80 - idx * 40) + 'px)';
+    if (id === 'wheelYear') wheelPicker.year = val;
+    if (id === 'wheelMonth') wheelPicker.month = val;
+    if (id === 'wheelDay') wheelPicker.day = val;
+  });
+}
+// 点击遮罩关闭
+document.getElementById('wheelPickerOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeWheelPicker();
+});
+</script>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="container">
+    <!-- 首页 -->
+    <div class="page active" id="page-home">
+        <div class="header">
+            <div class="logo-symbol">☯</div>
+            <h1>灵机妙算</h1>
+            <div class="subtitle">命理推算 · 面相分析 · 易经占卜 · 风水 · 黄历</div>
+        </div>
+        <div class="notice"><span>🔔</span><span style="cursor:pointer;" onclick="copyWechatNotice()">添加专业命理师微信，获取更详细的解读与开运建议</span></div>
+        <div class="section-title">🔮 核心功能</div>
+        <div class="func-grid">
+            <div class="func-card" onclick="showPage('page-bazi')"><span class="hot-tag">HOT</span><span class="icon">🏮</span><div class="title">八字命理</div><div class="desc">生辰八字·五行命盘·运势详批</div></div>
+            <div class="func-card" onclick="showPage('page-name')"><span class="icon">📝</span><div class="title">姓名测分</div><div class="desc">五格三才·姓名吉凶·运势加持</div></div>
+            <div class="func-card" onclick="showPage('page-yijing')"><span class="icon">🔮</span><div class="title">易经占卜</div><div class="desc">六爻卦象·趋吉避凶·指点迷津</div></div>
+            <div class="func-card" onclick="showPage('page-bazi-hehun')"><span class="icon">💑</span><div class="title">八字合婚</div><div class="desc">输入双方生辰·大师分析姻缘匹配</div></div>
+            <div class="func-card" onclick="showPage('page-palm')"><span class="icon">✋</span><div class="title">手相分析</div><div class="desc">掌纹命理·事业线·感情线·智慧线</div></div>
+            <div class="func-card" onclick="showPage('page-face')"><span class="icon">👤</span><div class="title">面相分析</div><div class="desc">五官面相·性格特点·运势走向</div></div>
+        </div>
+        <div class="section-title">📅 今日宜忌</div>
+        <div class="func-banner" onclick="showPage('page-huangli')"><span class="icon">📅</span><div class="info"><div class="title">黄历查询</div><div class="desc">今日宜忌·吉时查询·择日择吉</div></div><span class="arrow">›</span></div>
+        <div class="section-title">✨ 更多服务</div>
+        <div class="func-banner" onclick="showPage('page-fengshui')"><span class="icon">🧭</span><div class="info"><div class="title">风水测算</div><div class="desc">家居风水·方位吉凶·布局建议</div></div><span class="arrow">›</span></div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="showPage('page-home')"><span class="nav-icon">🏠</span><span>首页</span></div>
+            <div class="nav-item" onclick="showPage('page-huangli')"><span class="nav-icon">📅</span><span>黄历</span></div>
+            <div class="nav-item" onclick="showPage('page-bazi')"><span class="nav-icon">🏮</span><span>算命</span></div>
+            <div class="nav-item" onclick="showPage('page-yijing')"><span class="nav-icon">🔮</span><span>占卜</span></div>
+        </div>
+        <div class="disclaimer">⚠️ 本测试仅供娱乐参考，不构成任何决策建议<br>命运掌握在自己手中</div>
+    </div>
+
+    <!-- 八字合婚 -->
+    <div class="page" id="page-bazi-hehun">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">💑 八字合婚</div>
+        <div style="background:rgba(245,215,142,0.08);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
+            <div style="font-size:14px;color:#f5d78e;">👫 输入双方生辰，大师分析姻缘匹配度</div>
+        </div>
+        <div style="font-size:15px;color:#f5d78e;font-weight:bold;margin-bottom:12px;">👨 男方信息</div>
+        <div class="form-group"><label>👤 姓名</label><input type="text" id="hehun-male-name" placeholder="男方姓名（选填）"></div>
+        <div class="form-group"><label>📅 出生日期</label><input type="text" id="hehun-male-date" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+        <div class="form-group"><label>⏰ 出生时辰</label><select id="hehun-male-hour"><option value="">请选择出生时辰</option><option value="子时(23:00-01:00)">子时 (23:00-01:00)</option><option value="丑时(01:00-03:00)">丑时 (01:00-03:00)</option><option value="寅时(03:00-05:00)">寅时 (03:00-05:00)</option><option value="卯时(05:00-07:00)">卯时 (05:00-07:00)</option><option value="辰时(07:00-09:00)">辰时 (07:00-09:00)</option><option value="巳时(09:00-11:00)">巳时 (09:00-11:00)</option><option value="午时(11:00-13:00)">午时 (11:00-13:00)</option><option value="未时(13:00-15:00)">未时 (13:00-15:00)</option><option value="申时(15:00-17:00)">申时 (15:00-17:00)</option><option value="酉时(17:00-19:00)">酉时 (17:00-19:00)</option><option value="戌时(19:00-21:00)">戌时 (19:00-21:00)</option><option value="亥时(21:00-23:00)">亥时 (21:00-23:00)</option></select></div>
+        <div style="height:1px;background:rgba(245,215,142,0.15);margin:18px 0;"></div>
+        <div style="font-size:15px;color:#f5d78e;font-weight:bold;margin-bottom:12px;">👩 女方信息</div>
+        <div class="form-group"><label>👤 姓名</label><input type="text" id="hehun-female-name" placeholder="女方姓名（选填）"></div>
+        <div class="form-group"><label>📅 出生日期</label><input type="text" id="hehun-female-date" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+        <div class="form-group"><label>⏰ 出生时辰</label><select id="hehun-female-hour"><option value="">请选择出生时辰</option><option value="子时(23:00-01:00)">子时 (23:00-01:00)</option><option value="丑时(01:00-03:00)">丑时 (01:00-03:00)</option><option value="寅时(03:00-05:00)">寅时 (03:00-05:00)</option><option value="卯时(05:00-07:00)">卯时 (05:00-07:00)</option><option value="辰时(07:00-09:00)">辰时 (07:00-09:00)</option><option value="巳时(09:00-11:00)">巳时 (09:00-11:00)</option><option value="午时(11:00-13:00)">午时 (11:00-13:00)</option><option value="未时(13:00-15:00)">未时 (13:00-15:00)</option><option value="申时(15:00-17:00)">申时 (15:00-17:00)</option><option value="酉时(17:00-19:00)">酉时 (17:00-19:00)</option><option value="戌时(19:00-21:00)">戌时 (19:00-21:00)</option><option value="亥时(21:00-23:00)">亥时 (21:00-23:00)</option></select></div>
+        <button class="submit-btn" onclick="submitHehun()">开始合婚 ✨</button>
+    </div>
+
+    <!-- 八字算命 -->
+    <div class="page" id="page-bazi">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">🏮 八字算命</div>
+        <div class="form-group"><label>👤 您的姓名</label><input type="text" id="bazi-name" placeholder="请输入姓名（选填）"></div>
+        <div class="form-group"><label>📅 出生日期</label><input type="text" id="bazi-date" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+        <div class="form-group"><label>⏰ 出生时辰</label><select id="bazi-hour"><option value="">请选择出生时辰</option><option value="子时(23:00-01:00)">子时 (23:00-01:00)</option><option value="丑时(01:00-03:00)">丑时 (01:00-03:00)</option><option value="寅时(03:00-05:00)">寅时 (03:00-05:00)</option><option value="卯时(05:00-07:00)">卯时 (05:00-07:00)</option><option value="辰时(07:00-09:00)">辰时 (07:00-09:00)</option><option value="巳时(09:00-11:00)">巳时 (09:00-11:00)</option><option value="午时(11:00-13:00)">午时 (11:00-13:00)</option><option value="未时(13:00-15:00)">未时 (13:00-15:00)</option><option value="申时(15:00-17:00)">申时 (15:00-17:00)</option><option value="酉时(17:00-19:00)">酉时 (17:00-19:00)</option><option value="戌时(19:00-21:00)">戌时 (19:00-21:00)</option><option value="亥时(21:00-23:00)">亥时 (21:00-23:00)</option></select></div>
+        <div class="form-group"><label>⚧ 性别</label><select id="bazi-gender"><option value="男">男</option><option value="女">女</option></select></div>
+        <button class="submit-btn" onclick="submitBazi()">开始算命 ✨</button>
+    </div>
+
+    <!-- 面相分析 -->
+    <div class="page" id="page-face">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">👤 面相分析</div>
+        <div class="form-group"><label>👤 您的姓名</label><input type="text" id="face-name" placeholder="请输入姓名（选填）"></div>
+        <div class="form-group"><label>⚧ 性别</label><select id="face-gender"><option value="男">男</option><option value="女">女</option></select></div>
+        <div class="form-group"><label>📸 上传正面照片</label><input type="file" id="face-photo" accept="image/*" style="padding:12px;"><div style="font-size:12px;color:#5a4f6a;margin-top:6px;">请上传清晰的正面免冠照片</div></div>
+        <div id="face-preview" style="text-align:center;margin:14px 0;display:none;"><img id="face-preview-img" style="max-width:180px;border-radius:12px;border:2px solid rgba(245,215,142,0.3);"></div>
+        <button class="submit-btn" onclick="submitFace()">开始分析 ✨</button>
+    </div>
+
+    <!-- 姓名测分 -->
+    <div class="page" id="page-name">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">📝 姓名测分</div>
+        <div style="background:rgba(245,215,142,0.08);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
+            <div style="font-size:14px;color:#f5d78e;">输入姓名，智能分析五格三才、姓名吉凶</div>
+        </div>
+        <div class="form-group"><label>👤 您的姓名</label><input type="text" id="name-score" placeholder="请输入您的姓名"></div>
+        <div class="form-group"><label>⚧ 性别</label><select id="name-gender"><option value="男">男</option><option value="女">女</option></select></div>
+        <div class="form-group"><label>📅 出生日期（选填）</label><input type="text" id="name-birthday" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+        <button class="submit-btn" onclick="submitNameScore()">开始测分 ✨</button>
+    </div>
+
+    <!-- 手相分析 -->
+    <div class="page" id="page-palm">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">✋ 手相分析</div>
+        <div style="background:rgba(245,215,142,0.08);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
+            <div style="font-size:14px;color:#f5d78e;">上传手掌照片，智能分析掌纹命理</div>
+        </div>
+        <div class="form-group"><label>👤 您的姓名</label><input type="text" id="palm-name" placeholder="请输入姓名（选填）"></div>
+        <div class="form-group"><label>⚧ 性别</label><select id="palm-gender"><option value="男">男</option><option value="女">女</option></select></div>
+        <div class="form-group"><label>🤚 选择手掌</label><select id="palm-hand"><option value="左手">左手（先天运势）</option><option value="右手">右手（后天运势）</option><option value="双手">双手综合</option></select></div>
+        <div class="form-group"><label>📸 上传手掌照片</label><input type="file" id="palm-photo" accept="image/*" style="padding:12px;"><div style="font-size:12px;color:#5a4f6a;margin-top:6px;">请在光线充足的地方拍摄清晰的手掌照片</div></div>
+        <div id="palm-preview" style="text-align:center;margin:14px 0;display:none;"><img id="palm-preview-img" style="max-width:180px;border-radius:12px;border:2px solid rgba(245,215,142,0.3);"></div>
+        <button class="submit-btn" onclick="submitPalm()">开始分析 ✨</button>
+    </div>
+
+    <!-- 易经占卜 -->
+    <div class="page" id="page-yijing">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">🔮 易经占卜</div>
+        <p style="text-align:center;color:#8a7f9a;font-size:13px;margin-bottom:16px;">静心凝神，凭直觉选择3张卦牌</p>
+        <div class="form-group"><label>❓ 你想占卜什么？</label><input type="text" id="yijing-question" placeholder="例如：近期事业运势如何？"></div>
+        <div style="text-align:center;color:#f5d78e;font-size:13px;margin-bottom:10px;">已选 <span id="yijing-count">0</span>/3 张</div>
+        <div class="yijing-cards" id="yijing-cards"></div>
+        <button class="submit-btn" onclick="submitYijing()">解读卦象 ✨</button>
+    </div>
+
+    <!-- 风水测算 -->
+    <div class="page" id="page-fengshui">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">🧭 风水测算</div>
+        <div class="fengshui-compass"><span class="compass-direction compass-n">北</span><span class="compass-direction compass-s">南</span><span class="compass-direction compass-e">东</span><span class="compass-direction compass-w">西</span></div>
+        <div class="form-group"><label>🏠 房屋类型</label><select id="fengshui-type"><option value="住宅">住宅</option><option value="商铺">商铺</option><option value="办公室">办公室</option></select></div>
+        <div class="form-group"><label>🧭 房屋朝向</label><select id="fengshui-direction"><option value="">请选择房屋朝向</option><option value="坐北朝南">坐北朝南</option><option value="坐南朝北">坐南朝北</option><option value="坐东朝西">坐东朝西</option><option value="坐西朝东">坐西朝东</option><option value="坐东北朝西南">坐东北朝西南</option><option value="坐西南朝东北">坐西南朝东北</option><option value="坐东南朝西北">坐东南朝西北</option><option value="坐西北朝东南">坐西北朝东南</option></select></div>
+        <div class="form-group"><label>👤 您的生辰（选填）</label><input type="text" id="fengshui-birthday" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+        <div class="form-group"><label>📝 具体描述（选填）</label><textarea id="fengshui-desc" rows="3" placeholder="例如：最近总觉得运势不佳，家里客厅沙发摆放位置..."></textarea></div>
+        <button class="submit-btn" onclick="submitFengshui()">开始测算 ✨</button>
+    </div>
+
+    <!-- 黄历查询 -->
+    <div class="page" id="page-huangli">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回</div>
+        <div class="page-title">📅 黄历查询</div>
+        <div class="huangli-box" id="huangli-content"></div>
+        <div class="form-group" style="margin-top:20px;"><label>📅 查询其他日期</label><input type="text" id="huangli-date" placeholder="点击选择日期" readonly onclick="openWheelPicker(this)"></div>
+    </div>
+
+    <!-- 加载中 -->
+
+    <!-- 结果页 -->
+    <div class="page" id="page-result">
+        <div class="back-btn" onclick="showPage('page-home')">← 返回首页</div>
+        <div class="result-header"><h2 id="result-title">🔮 测算结果</h2></div>
+        <div class="result-body" id="result-body"></div>
+        <div style="text-align:center;margin-top:14px;">
+            <button class="submit-btn" style="background:linear-gradient(135deg,#f5d78e,#c9a24a);color:#2b1a52;font-size:14px;padding:12px 24px;font-weight:700;" onclick="showPoster()">🖼️ 生成分享海报</button>
+        </div>
+        <div class="cta-box">
+            <h3>🔮 师傅一对一详批 ¥99</h3>
+            <p>想看更深入的命盘详批？师傅人工一对一解读，含大运流年细批</p>
+            <p style="font-size:12px;color:#a89db8;margin-bottom:10px;">添加微信 <strong style="color:#f5d78e;">ljmiaosuan</strong>，转账后获取完整报告</p>
+            <a href="javascript:void(0)" class="cta-btn" onclick="copyWechatPay()">📱 复制微信并支付 ¥9.9</a>
+        </div>
+        <div style="text-align:center;margin-top:18px;"><button class="submit-btn" style="background:linear-gradient(135deg,#6a5f7a,#3a2a5e);font-size:14px;padding:12px;" onclick="showPage('page-home')">再测一次 🔄</button></div>
+    </div>
+</div>
+
+
+<script>
+/* MiniMax M3 via Pages Functions proxy */
+const MIMO_URL = /github\.io$/.test(location.hostname) ? 'https://lingjims.pages.dev/api/chat' : '/api/chat';
+
+// 清理AI返回的markdown符号，让显示更干净
+function cleanAIText(text) {
+    if (!text) return text;
+    // 去掉 # 标题符号（行首的#和空格）
+    text = text.replace(/^#{1,6}\s*/gm, '');
+    // 去掉 ** 加粗符号
+    text = text.replace(/\*\*/g, '');
+    // 去掉单个 *（列表符号或斜体）
+    text = text.replace(/\*/g, '·');
+    // 去掉 __ 加粗
+    text = text.replace(/__/g, '');
+    // 去掉 _ 斜体
+    text = text.replace(/(?<!\w)_(?!\w)/g, '');
+    // 去掉 --- 分割线
+    text = text.replace(/^---+$/gm, '————————————');
+    // 去掉行首多余的空格（保留缩进）
+    text = text.replace(/^\s{4,}/gm, '  ');
+    return text;
+}
+
+// 易经卦象数据
+const YIJING_DECK = [
+    { id: 1, symbol: '☰', name: '乾', meaning: '天·刚健', desc: '元亨利贞' },
+    { id: 2, symbol: '☷', name: '坤', meaning: '地·柔顺', desc: '厚德载物' },
+    { id: 3, symbol: '☵', name: '坎', meaning: '水·险阻', desc: '行险不失信' },
+    { id: 4, symbol: '☲', name: '离', meaning: '火·光明', desc: '重明丽正' },
+    { id: 5, symbol: '☳', name: '震', meaning: '雷·震动', desc: '震惊百里' },
+    { id: 6, symbol: '☴', name: '巽', meaning: '风·顺入', desc: '随风巽' },
+    { id: 7, symbol: '☶', name: '艮', meaning: '山·止定', desc: '艮其背' },
+    { id: 8, symbol: '☱', name: '兑', meaning: '泽·喜悦', desc: '丽泽兑' },
+    { id: 9, symbol: '☰☷', name: '天地泰', meaning: '通泰·顺利', desc: '泰小往大来' },
+    { id: 10, symbol: '☷☰', name: '天地否', meaning: '闭塞·等待', desc: '否之匪人' },
+    { id: 11, symbol: '☲☷', name: '火地晋', meaning: '晋升·进步', desc: '明出地上' },
+    { id: 12, symbol: '☷☲', name: '地火明夷', meaning: '韬晦·隐忍', desc: '明入地中' },
+];
+
+let selectedYijing = [];
+
+function initStars() {
+    const c = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = Math.random() * 3 + 1;
+        s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2}s;`;
+        c.appendChild(s);
+    }
+}
+
+// 初始化易经牌
+function initYijing() {
+    const grid = document.getElementById('yijing-cards');
+    const shuffled = [...YIJING_DECK].sort(() => Math.random() - 0.5).slice(0, 9);
+    shuffled.forEach(card => {
+        const div = document.createElement('div');
+        div.className = 'yijing-card';
+        div.dataset.id = card.id;
+        div.innerHTML = `<div class="card-symbol">${card.symbol}</div><div class="card-name">${card.name}</div><div class="card-meaning">${card.meaning}</div>`;
+        div.onclick = () => toggleYijing(div, card);
+        grid.appendChild(div);
+    });
+}
+
+function toggleYijing(el, card) {
+    if (el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        selectedYijing = selectedYijing.filter(c => c.id !== card.id);
+    } else {
+        if (selectedYijing.length >= 3) return;
+        el.classList.add('selected');
+        selectedYijing.push(card);
+    }
+    document.getElementById('yijing-count').textContent = selectedYijing.length;
+}
+
+// 页面切换
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'page-huangli') initHuangli();
+    window.scrollTo(0, 0);
+}
+
+// 照片预览
+document.getElementById('face-photo')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.getElementById('face-preview-img').src = ev.target.result;
+            document.getElementById('face-preview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// 手相照片预览
+document.getElementById('palm-photo')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.getElementById('palm-preview-img').src = ev.target.result;
+            document.getElementById('palm-preview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// API调用 - 流式输出版
+async function callMimo(systemPrompt, userPrompt) {
+    showResult('🔮 测算结果', '正在为您精准推算......');
+    for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+        const resp = await fetch(MIMO_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'mimo-v2.6-pro',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userPrompt }
+                ],
+                max_tokens: 8000,
+                temperature: 0.7,
+                thinking: { type: 'disabled' },
+                chat_template_kwargs: { enable_thinking: false },
+                reasoning_effort: 'none',
+                stream: true
+            })
+        });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        // 流式读取（带buffer拼接，防止chunk拆分SSE事件）
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let content = '';
+        let buffer = '';  // 拼接跨chunk的不完整行
+        let renderPending = false;  // 节流：避免每个delta都触发DOM重排
+        const el = document.getElementById('result-body');
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            // 最后一段可能不完整，留在buffer里等下一个chunk
+            buffer = lines.pop() || '';
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('data: ') && trimmed !== 'data: [DONE]') {
+                    try {
+                        const data = JSON.parse(trimmed.slice(6));
+                        const delta = data.choices?.[0]?.delta?.content || '';
+                        if (delta) {
+                            content += delta;
+                            // 节流渲染：用rAF合并同一帧内的多次delta
+                            if (!renderPending) {
+                                renderPending = true;
+                                requestAnimationFrame(() => {
+                                    el.textContent = content;
+                                    renderPending = false;
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        // SSE行可能被拆分，跳过等拼接
+                    }
+                }
+            }
+        }
+        // 处理buffer中剩余数据
+        if (buffer.trim().startsWith('data: ') && buffer.trim() !== 'data: [DONE]') {
+            try {
+                const data = JSON.parse(buffer.trim().slice(6));
+                const delta = data.choices?.[0]?.delta?.content || '';
+                if (delta) content += delta;
+            } catch (e) {}
+        }
+        // 最终结果：只做一次cleanAIText，走半遮挡付费墙渲染
+        if (!content) throw new Error('empty content');
+        renderPaywall(cleanAIText(content));
+        return;
+    } catch (err) {
+        if (attempt >= 3) {
+            if (err && err.message === 'empty content') document.getElementById('result-body').textContent = '服务器繁忙，请稍后再试';
+            else showResult('⚠️ 网络错误', '无法连接到AI服务\n\n' + (err ? err.message : ''));
+            return;
+        }
+        await new Promise(function(res){ setTimeout(res, 2000); });
+        showResult('🔮 测算结果', '正在为您精准推算......');
+    }
+    }
+}
+
+function showResult(title, content) {
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-body').textContent = content;
+    showPage('page-result');
+}
+
+// 八字算命
+function submitBazi() {
+    const date = document.getElementById('bazi-date').value;
+    const hour = document.getElementById('bazi-hour').value;
+    if (!date) return alert('请选择出生日期');
+    if (!hour) return alert('请选择出生时辰');
+    const name = document.getElementById('bazi-name').value || '缘主';
+    const gender = document.getElementById('bazi-gender').value;
+    const sys = '你是一位精通中国传统命理学的八字算命大师。请根据用户的出生日期和时辰进行八字分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写铺垫和套话。格式：1.八字排盘（四柱一行列出）2.五行喜忌（一句话）3.性格特点 4.事业财运 5.感情婚姻 6.开运建议（3条短句）7.【总结】2句话。通俗易懂，可少量emoji。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n出生日期：' + date + '\n出生时辰：' + hour + '\n请为我进行精简的八字命理分析。';
+    callMimo(sys, user);
+}
+
+// 八字合婚
+function submitHehun() {
+    const maleDate = document.getElementById('hehun-male-date').value;
+    const maleHour = document.getElementById('hehun-male-hour').value;
+    const femaleDate = document.getElementById('hehun-female-date').value;
+    const femaleHour = document.getElementById('hehun-female-hour').value;
+    if (!maleDate || !maleHour) return alert('请填写男方完整的出生信息');
+    if (!femaleDate || !femaleHour) return alert('请填写女方完整的出生信息');
+    const maleName = document.getElementById('hehun-male-name').value || '男方';
+    const femaleName = document.getElementById('hehun-female-name').value || '女方';
+    const sys = '你是一位精通八字合婚的传统命理师。请根据男女双方的出生信息进行八字合婚分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.双方八字（一行）2.五行匹配（一句话）3.性格匹配度 4.婚姻运势 5.注意年份 6.相处建议（2条短句）7.综合评分（满分100分）8.【总结】2句话。语言温和有建设性。';
+    const user = '男方：' + maleName + '，出生日期：' + maleDate + '，时辰：' + maleHour + '\n女方：' + femaleName + '，出生日期：' + femaleDate + '，时辰：' + femaleHour + '\n请为我们进行精简的八字合婚分析。';
+    callMimo(sys, user);
+}
+
+// 面相分析
+function submitFace() {
+    const name = document.getElementById('face-name').value || '缘主';
+    const gender = document.getElementById('face-gender').value;
+    const sys = '你是一位精通中国传统面相学的面相大师。请根据用户提供的信息进行面相分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.整体格局 2.五官点评（额眉眼鼻口耳合并，3句以内）3.面型与运势 4.开运建议（2条短句）5.【总结】2句话。专业但通俗，带传统文化韵味。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n请为我进行面相分析，给出精简的面相解读和运势建议。';
+    callMimo(sys, user);
+}
+
+// 姓名测分
+function submitNameScore() {
+    const name = document.getElementById('name-score').value;
+    if (!name) return alert('请输入您的姓名');
+    const gender = document.getElementById('name-gender').value;
+    const birthday = document.getElementById('name-birthday').value;
+    const sys = '你是一位精通中国传统姓名学的姓名大师。请根据用户提供的姓名进行分析评分，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.五格三才（合并一句）2.五行吉凶 3.性格影响 4.事业感情影响 5.综合评分（满分100分）6.改名建议（如有需要，一句话）7.【总结】2句话。专业客观。';
+    const user = '姓名：' + name + '\n性别：' + gender + (birthday ? '\n出生日期：' + birthday : '') + '\n请为我进行精简的姓名分析和评分。';
+    callMimo(sys, user);
+}
+
+// 手相分析
+function submitPalm() {
+    const name = document.getElementById('palm-name').value || '缘主';
+    const gender = document.getElementById('palm-gender').value;
+    const hand = document.getElementById('palm-hand').value;
+    const sys = '你是一位精通中国传统手相学的手相大师。请根据用户提供的信息进行手相分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.掌型 2.三大主线（生命线、智慧线、感情线各一句）3.事业财运（合并）4.婚姻健康（合并）5.特殊掌纹（如有）6.开运建议（2条短句）7.【总结】2句话。专业但通俗。';
+    const user = '姓名：' + name + '\n性别：' + gender + '\n分析手掌：' + hand + '\n请为我进行精简的手相分析，给出运势解读和建议。';
+    callMimo(sys, user);
+}
+
+// 易经占卜
+function submitYijing() {
+    const question = document.getElementById('yijing-question').value;
+    if (!question) return alert('请输入你的问题');
+    if (selectedYijing.length < 3) return alert('请选择3张卦牌');
+    const cards = selectedYijing.map(c => c.symbol + ' ' + c.name + '(' + c.meaning + '): ' + c.desc).join('\n');
+    const sys = '你是一位精通易经卦象的大师。请根据用户抽取的卦牌和问题进行占卜解读，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.卦象总览 2.三张卦牌（各一句）3.对问题的解答（2-3句）4.行动建议（2条短句）5.【总结】2句话。传统易学语言结合现代白话。';
+    const user = '我的问题：' + question + '\n\n抽取的卦牌：\n' + cards + '\n\n请为我进行精简的易经占卜解读。';
+    callMimo(sys, user);
+}
+
+// 风水测算
+function submitFengshui() {
+    const direction = document.getElementById('fengshui-direction').value;
+    if (!direction) return alert('请选择房屋朝向');
+    const type = document.getElementById('fengshui-type').value;
+    const birthday = document.getElementById('fengshui-birthday').value;
+    const desc = document.getElementById('fengshui-desc').value;
+    const sys = '你是一位精通中国传统风水学的风水大师。请根据用户提供的房屋信息进行风水分析，结果务必精简：全文不超过300字，每个要点1-2句短话，不写套话。格式：1.朝向与整体格局（一句）2.财位与桃花位/文昌位（各一句）3.厨房卧室（合并）4.煞气化解（如有）5.布局建议（3条短句）6.【总结】2句话。专业实用。';
+    const user = '房屋类型：' + type + '\n房屋朝向：' + direction + '\n业主生辰：' + (birthday || '未提供') + '\n补充说明：' + (desc || '无') + '\n\n请为我进行精简的风水分析和布局建议。';
+    callMimo(sys, user);
+}
+
+// 黄历查询
+function initHuangli() {
+    const today = new Date();
+    renderHuangli(today);
+}
+
+function queryHuangli(dateStr) {
+    if (!dateStr) return;
+    var lunarMatch = String(dateStr).match(/^农历(\d{4})-(\d{2})-(\d{2})$/);
+    if (lunarMatch) {
+        var solarDate = lunarToSolar(parseInt(lunarMatch[1]), parseInt(lunarMatch[2]), parseInt(lunarMatch[3]));
+        if (!solarDate) { renderHuangli(new Date()); return; }
+        renderHuangli(solarDate);
+        return;
+    }
+    renderHuangli(new Date(dateStr));
+}
+function lunarToSolar(y, m, d) {
+    var dt = new Date(y, 0, 20);
+    for (var i = 0; i < 400; i++) {
+        var l = solarToLunar(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
+        if (l.year === y && l.month === m && l.day === d && !l.isLeap) return dt;
+        dt.setDate(dt.getDate() + 1);
+    }
+    return null;
+}
+
+// 农历转换库（1900-2100年精确数据）
+const lunarInfo = [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+    0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+    0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+    0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+    0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+    0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+    0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+    0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+    0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+    0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x05ac0,0x0ab60,0x096d5,0x092e0,
+    0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+    0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+    0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+    0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+    0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+    0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,
+    0x092e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
+    0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
+    0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
+    0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
+    0x0d520];
+
+function lunarYearDays(y) {
+    let sum = 348;
+    for (let i = 0x8000; i > 0x8; i >>= 1) sum += (lunarInfo[y - 1900] & i) ? 1 : 0;
+    return sum + leapDays(y);
+}
+
+function leapMonth(y) { return lunarInfo[y - 1900] & 0xf; }
+
+function leapDays(y) {
+    if (leapMonth(y)) return (lunarInfo[y - 1900] & 0x10000) ? 30 : 29;
+    return 0;
+}
+
+function monthDays(y, m) {
+    return (lunarInfo[y - 1900] & (0x10000 >> m)) ? 30 : 29;
+}
+
+function solarToLunar(year, month, day) {
+    let offset = Math.floor((Date.UTC(year, month - 1, day) - Date.UTC(1900, 0, 31)) / 86400000);
+    let y = 1900;
+    for (; y < 2101 && offset > 0; y++) offset -= lunarYearDays(y);
+    if (offset < 0) { offset += lunarYearDays(--y); }
+    const leap = leapMonth(y);
+    let isLeap = false;
+    let m = 1;
+    for (; m < 13 && offset > 0; m++) {
+        if (leap > 0 && m === leap + 1 && !isLeap) { --m; isLeap = true; const d = leapDays(y); if (offset < d) break; offset -= d; isLeap = false; }
+        const d = monthDays(y, m);
+        if (offset < d) break;
+        offset -= d;
+    }
+    return { year: y, month: m, day: offset + 1, isLeap: isLeap };
+}
+
+function renderHuangli(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+    const week = weekDays[date.getDay()];
+    
+    const tianGan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const diZhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+    const ganZhiYear = tianGan[(year - 4) % 10] + diZhi[(year - 4) % 12] + '年';
+    
+    const goodThings = ['祭祀', '祈福', '求嗣', '开光', '出行', '嫁娶', '纳采', '开市', '交易', '立券', '挂匾', '入宅', '移徙', '安床', '修造', '动土', '栽种', '纳畜', '安葬'];
+    const badThings = ['破土', '安葬', '行丧', '伐木', '作梁', '开仓', '出货财', '乘船', '词讼', '针灸', '解除', '求医'];
+    
+    const seed = year * 10000 + month * 100 + day;
+    const rng = (n) => { let x = Math.sin(seed + n) * 10000; return x - Math.floor(x); };
+    const goodCount = 4 + Math.floor(rng(1) * 4);
+    const badCount = 3 + Math.floor(rng(2) * 3);
+    const good = goodThings.filter((_, i) => rng(i + 10) > 0.5).slice(0, goodCount);
+    const bad = badThings.filter((_, i) => rng(i + 50) > 0.4).slice(0, badCount);
+    
+    const jiShi = ['子时(23-01)', '寅时(03-05)', '辰时(07-09)', '巳时(09-11)', '未时(13-15)', '酉时(17-19)'].filter((_, i) => rng(i + 100) > 0.4);
+    
+    const animals = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
+    const chongAnimal = animals[Math.floor(rng(200) * 12)];
+    const shaDirection = ['东', '南', '西', '北'][Math.floor(rng(210) * 4)];
+    
+    // 使用精确农历转换
+    const lunar = solarToLunar(year, month, day);
+    const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+    const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+    const lunarMonthStr = (lunar.isLeap ? '闰' : '') + lunarMonths[lunar.month - 1];
+    const lunarDayStr = lunarDays[lunar.day - 1];
+    
+    document.getElementById('huangli-content').innerHTML = `
+        <div class="huangli-date">
+            <div class="solar">${year}年${month}月${day}日 星期${week}</div>
+            <div class="lunar">农历${lunarMonthStr}月${lunarDayStr}</div>
+            <div class="ganzhi">${ganZhiYear}</div>
+        </div>
+        <div class="huangli-section">
+            <div class="label">✅ 宜</div>
+            <div class="huangli-tags">${good.map(g => `<span class="huangli-tag good">${g}</span>`).join('')}</div>
+        </div>
+        <div class="huangli-section">
+            <div class="label">❌ 忌</div>
+            <div class="huangli-tags">${bad.map(b => `<span class="huangli-tag bad">${b}</span>`).join('')}</div>
+        </div>
+        <div class="huangli-section">
+            <div class="label">⏰ 吉时</div>
+            <div class="huangli-tags">${jiShi.map(j => `<span class="huangli-tag neutral">${j}</span>`).join('')}</div>
+        </div>
+        <div class="huangli-section">
+            <div class="label">⚠️ 冲煞</div>
+            <div style="font-size:14px;color:#c8b898;">冲${chongAnimal} 煞${shaDirection}</div>
+        </div>
+    `;
+}
+
+// 复制微信号
+function copyWechat() {
+    const text = document.getElementById('wechat-id').textContent.replace('微信号：', '');
+    navigator.clipboard?.writeText(text).then(() => alert('微信号已复制：' + text + '\n\n请打开微信，搜索此微信号添加好友')).catch(() => alert('请手动复制微信号：' + text));
+}
+
+function copyWechatPay() {
+    const wx = 'ljmiaosuan';
+    navigator.clipboard?.writeText(wx).then(() => {
+        alert('微信号已复制：' + wx + '\n\n请打开微信 → 搜索 → 粘贴添加好友\n\n转账 ¥9.9 后，命理师将发送完整报告');
+    }).catch(() => alert('请手动复制微信号：' + wx + '\n\n转账 ¥9.9 后，命理师将发送完整报告'));
+}
+
+function copyWechatNotice() {
+    const text = 'ljmiaosuan';
+    navigator.clipboard?.writeText(text).then(() => alert('✅ 微信号已复制：' + text + '\n\n请打开微信 → 搜索 → 粘贴添加好友')).catch(() => alert('请手动复制微信号：' + text));
+}
+
+
+initStars();
+initYijing();
+
+
+
+
+// 黄历日期变化监听
+document.addEventListener('DOMContentLoaded', function() {
+  var huangliInput = document.getElementById('huangli-date');
+  // 默认今天
+  var today = new Date();
+  var ds = today.getFullYear() + '-' + (today.getMonth()+1 < 10 ? '0' : '') + (today.getMonth()+1) + '-' + (today.getDate() < 10 ? '0' : '') + today.getDate();
+  huangliInput.value = ds;
+  queryHuangli(ds);
+  huangliInput.addEventListener('change', function() {
+    if (this.value) queryHuangli(this.value);
+  });
+});
+
+
+</script>
+
+<script src="paywall.js"></script>
+</body>
+</html>
+<!-- MiniMax-M3-v2 -->
